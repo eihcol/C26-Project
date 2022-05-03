@@ -7,7 +7,7 @@ var engine, world;
 var canvas;
 var palyer, playerBase, playerArcher;
 var playerArrows = [];
-var board1, board2;
+
 
 function preload() {
   backgroundImg = loadImage("./assets/background.png");
@@ -40,9 +40,8 @@ function setup() {
     120
   );
 
-  board1 = new Board(width - 300, 330, 50, 200);
-  board2 = new Board(width - 550, height - 300, 50, 200);
-
+  board1 = new Board(width -300, 330, 50,200);
+  board2 = new Board(width -550, height - 300, 50,200);
 }
 
 function draw() {
@@ -53,15 +52,15 @@ function draw() {
   image(playerimage,player.position.x,player.position.y,50,180)
 
   playerArcher.display();
-  
+
   board1.display();
   board2.display();
 
   for (var i = 0; i < playerArrows.length; i++) {
     if (playerArrows[i] !== undefined) {
       playerArrows[i].display();
-
-      var board1Collision =Matter.SAT.collides(
+      
+      var board1Collision = Matter.SAT.collides(
         board1.body,
         playerArrows[i].body
       );
@@ -71,7 +70,13 @@ function draw() {
         playerArrows[i].body
       );
     }
+    if(board1Collision.collided || board2Collision.collided){
+      console.log("collided");
+    }
+
   }
+
+  
 
   // Title
   fill("#FFFF");
@@ -101,4 +106,10 @@ function keyReleased() {
       playerArrows[playerArrows.length - 1].shoot(angle);
     }
   }
+}
+
+remove(index){
+  this.isRemoved = true;
+  Matter.World.remove(world, this.body);
+  delete playerArrows[index];
 }
